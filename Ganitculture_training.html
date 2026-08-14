@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ganit Culture Training</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+  :root {
+    --navy:#1A237E; --navy-mid:#283593; --navy-light:#E8EAF6;
+    --orange:#F57C00; --orange-light:#FFF3E0;
+    --white:#fff; --slate:#F4F6FA; --text:#1C1F2E; --text-muted:#5C6480;
+    --green:#2E7D32; --green-light:#E8F5E9;
+    --red:#C62828; --red-light:#FFEBEE;
+    --shadow:0 2px 16px rgba(26,35,126,0.09);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',sans-serif;background:var(--slate);color:var(--text);min-height:100vh;}
+
+  /* ── HEADER ── */
+  .header{background:var(--navy);color:white;padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+  .hbrand{display:flex;align-items:center;gap:12px;}
+  .hlogo{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:white;letter-spacing:-.5px;}
+  .hlogo span{color:var(--orange);}
+  .hbadge{background:var(--orange);color:white;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase;}
+  .hright{display:flex;align-items:center;gap:14px;}
+  .hplbl{font-size:12px;color:rgba(255,255,255,.65);}
+  .hpbar{width:150px;height:6px;background:rgba(255,255,255,.2);border-radius:3px;overflow:hidden;}
+  .hpfill{height:100%;background:var(--orange);border-radius:3px;transition:width .4s;}
+
+  /* ── LAYOUT ── */
+  .layout{display:flex;max-width:1200px;margin:0 auto;padding:32px 24px;gap:28px;align-items:flex-start;}
+
+  /* ── SIDEBAR ── */
+  .sidebar{width:256px;flex-shrink:0;position:sticky;top:88px;}
+  .scard{background:white;border-radius:12px;overflow:hidden;box-shadow:var(--shadow);}
+  .stitle{background:var(--navy);color:white;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;padding:13px 18px;letter-spacing:.5px;text-transform:uppercase;}
+  .sitem{display:flex;align-items:center;gap:10px;padding:12px 18px;cursor:pointer;border-bottom:1px solid var(--navy-light);font-size:13px;font-weight:500;color:var(--text-muted);transition:background .15s;}
+  .sitem:last-child{border-bottom:none;}
+  .sitem:hover{background:var(--slate);color:var(--navy);}
+  .sitem.active{background:var(--navy-light);color:var(--navy);font-weight:600;}
+  .sitem.done .sdot{background:var(--green);}
+  .sdot{width:8px;height:8px;border-radius:50%;background:#CBD2E0;flex-shrink:0;transition:background .3s;}
+  .sitem.active .sdot{background:var(--orange);}
+  .snum{font-size:11px;color:#aaa;margin-left:auto;}
+
+  /* ── MAIN ── */
+  .main{flex:1;min-width:0;}
+  .module{background:white;border-radius:14px;box-shadow:var(--shadow);overflow:hidden;display:none;}
+  .module.active{display:block;}
+
+  /* ── MODULE HEADER ── */
+  .mhdr{padding:26px 36px;color:white;border-left:6px solid var(--orange);}
+  .mhdr.p1{background:linear-gradient(120deg,#1A237E 0%,#283593 100%);}
+  .mhdr.p2{background:linear-gradient(120deg,#1B5E20 0%,#2E7D32 100%);}
+  .mhdr.p3{background:linear-gradient(120deg,#7B1FA2 0%,#9C27B0 100%);}
+  .mhdr.p4{background:linear-gradient(120deg,#E65100 0%,#F57C00 100%);}
+  .mhdr.p5{background:linear-gradient(120deg,#0D47A1 0%,#1565C0 100%);}
+  .mhdr.quiz{background:linear-gradient(120deg,#1A237E 0%,#283593 100%);}
+  .meyebrow{font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--orange);margin-bottom:7px;}
+  .mhdr.p2 .meyebrow{color:#A5D6A7;}
+  .mhdr.p3 .meyebrow{color:#CE93D8;}
+  .mhdr.p4 .meyebrow{color:#FFE0B2;}
+  .mhdr.p5 .meyebrow{color:#90CAF9;}
+  .mtitle{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;color:white;line-height:1.2;}
+  .msub{font-size:13px;color:rgba(255,255,255,.65);margin-top:5px;font-style:italic;}
+
+  /* ── BODY ── */
+  .mbody{padding:30px 36px;}
+
+  /* ── PRINCIPLE BADGE ── */
+  .pbadge{display:inline-flex;align-items:center;gap:10px;background:var(--navy-light);border-radius:10px;padding:14px 20px;margin-bottom:22px;width:100%;}
+  .pbadge-num{font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:700;color:var(--navy);min-width:48px;}
+  .pbadge-text{font-size:14px;color:var(--navy);line-height:1.5;}
+  .pbadge-text strong{display:block;font-size:16px;font-family:'Space Grotesk',sans-serif;}
+
+  /* ── RULE CARD ── */
+  .rcard{border-left:4px solid var(--navy);background:var(--navy-light);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;}
+  .rcard.or{border-color:var(--orange);background:var(--orange-light);}
+  .rcard.gr{border-color:var(--green);background:var(--green-light);}
+  .rlabel{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--navy);margin-bottom:4px;}
+  .rcard.or .rlabel{color:var(--orange);}
+  .rcard.gr .rlabel{color:var(--green);}
+  .rtext{font-size:14px;font-weight:600;color:var(--navy);line-height:1.6;}
+  .rcard.or .rtext{color:#7B3900;}
+  .rcard.gr .rtext{color:#1B5E20;}
+
+  /* ── SECTION ── */
+  .cs{margin-bottom:26px;}
+  .sh{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:11px;padding-bottom:7px;border-bottom:2px solid var(--navy-light);display:flex;align-items:center;gap:7px;}
+  .sh::before{content:'';width:4px;height:15px;background:var(--orange);border-radius:2px;display:inline-block;}
+
+  /* ── GRID ── */
+  .igrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+  .igrid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;}
+  .iitem{background:var(--slate);border-radius:8px;padding:14px 16px;font-size:13px;color:var(--text);line-height:1.5;border:1px solid #E0E4EF;}
+  .iitem strong{color:var(--navy);display:block;margin-bottom:3px;font-size:11px;text-transform:uppercase;letter-spacing:.5px;}
+  .iitem .icon{font-size:22px;margin-bottom:6px;display:block;}
+
+  /* ── BULLET LIST ── */
+  .blist{list-style:none;}
+  .blist li{font-size:14px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--navy-light);line-height:1.55;}
+  .blist li:last-child{border-bottom:none;}
+  .blist li::before{content:'→';position:absolute;left:0;color:var(--orange);font-weight:700;font-size:12px;top:9px;}
+  .blist li strong{color:var(--navy);}
+
+  /* ── QUOTE BOX ── */
+  .qbox{background:var(--slate);border-radius:10px;padding:18px 20px;font-size:14px;color:var(--text);line-height:1.7;border:1px solid #E0E4EF;margin-top:16px;}
+  .qbox strong{color:var(--orange);}
+  .qbox .qhl{color:var(--navy);font-weight:600;display:block;margin-top:6px;}
+
+  /* ── STATUS PILLS ── */
+  .status-row{display:flex;gap:12px;margin-bottom:20px;}
+  .status-pill{flex:1;border-radius:10px;padding:14px 16px;text-align:center;}
+  .status-pill.green-pill{background:var(--green-light);border:2px solid #A5D6A7;}
+  .status-pill.red-pill{background:var(--red-light);border:2px solid #EF9A9A;}
+  .status-pill .spicon{font-size:28px;margin-bottom:4px;}
+  .status-pill .spname{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;}
+  .status-pill.green-pill .spname{color:var(--green);}
+  .status-pill.red-pill .spname{color:var(--red);}
+  .status-pill .spdesc{font-size:12px;color:var(--text-muted);margin-top:3px;}
+
+  /* ── PROMISE LIST ── */
+  .promise-list{background:var(--navy-light);border-radius:10px;padding:16px 20px;}
+  .promise-list .pl-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;}
+  .promise-list .pl-item{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--navy);padding:7px 0;border-bottom:1px solid rgba(26,35,126,.1);}
+  .promise-list .pl-item:last-child{border-bottom:none;}
+  .promise-list .pl-item::before{content:'✅';font-size:14px;}
+
+  /* ── GROWTH TAGS ── */
+  .gtags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+  .gtag{background:var(--navy-light);color:var(--navy);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;}
+  .gtag.or{background:var(--orange-light);color:#7B3900;}
+  .gtag.gr{background:var(--green-light);color:var(--green);}
+
+  /* ── NAV ── */
+  .mnav{display:flex;align-items:center;justify-content:space-between;padding:18px 36px;border-top:1px solid var(--navy-light);background:var(--slate);}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .18s;font-family:'Inter',sans-serif;}
+  .btn-p{background:var(--navy);color:white;}
+  .btn-p:hover{background:var(--navy-mid);transform:translateY(-1px);}
+  .btn-o{background:white;color:var(--navy);border:2px solid var(--navy-light);}
+  .btn-o:hover{border-color:var(--navy);background:var(--navy-light);}
+  .btn-org{background:var(--orange);color:white;}
+  .btn-org:hover{background:#E65100;}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+
+  /* ── QUIZ ── */
+  .qprog{display:flex;gap:5px;margin-bottom:22px;flex-wrap:wrap;}
+  .qdot{width:26px;height:5px;background:#CBD2E0;border-radius:3px;transition:background .3s;}
+  .qdot.done{background:var(--green);}
+  .qdot.current{background:var(--orange);}
+  .qdot.wrong{background:var(--red);}
+  .quiz-q{display:none;}
+  .quiz-q.active{display:block;}
+  .qnum{font-size:11px;font-weight:700;color:var(--orange);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;}
+  .qtxt{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;color:var(--navy);margin-bottom:20px;line-height:1.4;}
+  .qopts{display:flex;flex-direction:column;gap:9px;margin-bottom:18px;}
+  .qopt{display:flex;align-items:flex-start;gap:11px;padding:13px 17px;border:2px solid #E0E4EF;border-radius:10px;cursor:pointer;transition:all .15s;font-size:14px;line-height:1.5;background:white;}
+  .qopt:hover{border-color:var(--navy);background:var(--navy-light);}
+  .qopt.correct{border-color:var(--green);background:var(--green-light);color:var(--green);font-weight:600;}
+  .qopt.wrong{border-color:var(--red);background:var(--red-light);color:var(--red);}
+  .qopt.disabled{cursor:default;pointer-events:none;}
+  .qltr{font-weight:700;font-size:13px;color:var(--navy);width:20px;flex-shrink:0;margin-top:1px;}
+  .qopt.correct .qltr{color:var(--green);}
+  .qopt.wrong .qltr{color:var(--red);}
+  .qfb{display:none;padding:13px 17px;border-radius:8px;font-size:13px;font-weight:500;margin-bottom:14px;line-height:1.6;}
+  .qfb.show{display:flex;gap:9px;align-items:flex-start;}
+  .qfb.cfb{background:var(--green-light);color:var(--green);border:1px solid #A5D6A7;}
+  .qfb.wfb{background:var(--red-light);color:var(--red);border:1px solid #EF9A9A;}
+
+  /* ── SCORE ── */
+  .swrap{text-align:center;padding:44px 36px;}
+  .sring{width:130px;height:130px;border-radius:50%;margin:0 auto 22px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:8px solid var(--navy-light);}
+  .sring.pass{border-color:var(--green);}
+  .sring.fail{border-color:var(--red);}
+  .spct{font-family:'Space Grotesk',sans-serif;font-size:40px;font-weight:700;color:var(--navy);line-height:1;}
+  .spct.pass{color:var(--green);}
+  .spct.fail{color:var(--red);}
+  .slbl{font-size:11px;color:var(--text-muted);}
+  .stitle{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;color:var(--navy);margin-bottom:7px;}
+  .ssub{font-size:14px;color:var(--text-muted);margin-bottom:24px;line-height:1.6;}
+  .sbd{display:flex;justify-content:center;gap:28px;margin-bottom:26px;}
+  .sstat{text-align:center;}
+  .snum{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:var(--navy);}
+  .snum.g{color:var(--green);}
+  .snum.r{color:var(--red);}
+  .slabel{font-size:12px;color:var(--text-muted);}
+
+  @media(max-width:768px){
+    .layout{flex-direction:column;padding:16px;}
+    .sidebar{width:100%;position:static;}
+    .igrid,.igrid3{grid-template-columns:1fr;}
+    .mhdr,.mbody,.mnav{padding-left:20px;padding-right:20px;}
+    .header{padding:0 16px;}
+    .hright{display:none;}
+    .status-row{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="hbrand">
+    <div class="hlogo">G<span>anit</span></div>
+    <div class="hbadge">Culture Training</div>
+  </div>
+  <div class="hright">
+    <span class="hplbl" id="progLabel">Module 1 of 6</span>
+    <div class="hpbar"><div class="hpfill" id="progFill" style="width:16.6%"></div></div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="scard">
+      <div class="stitle">Ganit Culture — 5 Principles</div>
+      <div class="sitem active" id="nav-0" onclick="goMod(0)"><div class="sdot"></div>Overview<span class="snum">Intro</span></div>
+      <div class="sitem" id="nav-1" onclick="goMod(1)"><div class="sdot"></div>🟡 Yellow Colour Blind<span class="snum">01</span></div>
+      <div class="sitem" id="nav-2" onclick="goMod(2)"><div class="sdot"></div>💪 Punching Above Weight<span class="snum">02</span></div>
+      <div class="sitem" id="nav-3" onclick="goMod(3)"><div class="sdot"></div>🤝 Promise of Small Promises<span class="snum">03</span></div>
+      <div class="sitem" id="nav-4" onclick="goMod(4)"><div class="sdot"></div>🎯 Attitude over Aptitude<span class="snum">04</span></div>
+      <div class="sitem" id="nav-5" onclick="goMod(5)"><div class="sdot"></div>📢 Maximise Vocalness<span class="snum">05</span></div>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- ══════════════════════════════════════════
+         MODULE 0 — OVERVIEW / INTRO
+    ══════════════════════════════════════════ -->
+    <div class="module active" id="mod-0">
+      <div class="mhdr p1">
+        <div class="meyebrow">Ganit Culture · Introduction</div>
+        <div class="mtitle">Ganit Culture — Five Principles. One Ganit.</div>
+        <div class="msub">Add · Solve · Grow</div>
+      </div>
+      <div class="mbody">
+
+        <div class="rcard gr">
+          <div class="rlabel">What is Ganit Culture?</div>
+          <div class="rtext">"Culture is not what we write on walls. It is how we respond when work is difficult, deadlines are tight, opinions differ and no one is watching."</div>
+        </div>
+
+        <div class="cs">
+          <div class="sh">The 5 Principles You Will Learn</div>
+          <div class="igrid">
+            <div class="iitem"><span class="icon">🟡</span><strong>01 — Yellow Colour Blind</strong>No vague status. Green or Red. Radical honesty about where things stand.</div>
+            <div class="iitem"><span class="icon">💪</span><strong>02 — Punching Above Your Weight</strong>Create more impact than your role demands. Think bigger. Do more.</div>
+            <div class="iitem"><span class="icon">🤝</span><strong>03 — Promise of Small Promises</strong>Small promises kept always. Big promises rarely but definitely. Trust is built in the small things.</div>
+            <div class="iitem"><span class="icon">🎯</span><strong>04 — Attitude over Aptitude</strong>We hire for attitude. We grow with learning. We lead with mindset.</div>
+            <div class="iitem"><span class="icon">📢</span><strong>05 — Maximise Vocalness & Minimise Hierarchy</strong>Ideas over titles. Speak up. Listen deeply. Together we make better decisions.</div>
+          </div>
+        </div>
+
+        <div class="cs">
+          <div class="sh">Why This Matters</div>
+          <ul class="blist">
+            <li>These are not aspirational values on a wall — they are how Ganitans behave every day</li>
+            <li>Every principle has a clear "Ganit Rule" that is non-negotiable</li>
+            <li>Culture is lived in small daily actions — how we communicate, how we follow through, how we treat each other</li>
+            <li>Understanding these principles helps you integrate faster, perform better, and grow at Ganit</li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="mnav">
+        <button class="btn btn-o" disabled>← Previous</button>
+        <button class="btn btn-p" onclick="goMod(1)">Start Principle 01 →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         MODULE 1 — BEING YELLOW COLOUR BLIND
+    ══════════════════════════════════════════ -->
+    <div class="module" id="mod-1">
+      <div class="mhdr p1">
+        <div class="meyebrow">Principle 01 of 05</div>
+        <div class="mtitle">🟡 Being Yellow Colour Blind</div>
+        <div class="msub">No vague status. Green or Red.</div>
+      </div>
+      <div class="mbody">
+
+        <div class="status-row">
+          <div class="status-pill green-pill">
+            <div class="spicon">✅</div>
+            <div class="spname">GREEN</div>
+            <div class="spdesc">On track. No blockers.</div>
+          </div>
+          <div class="status-pill red-pill">
+            <div class="spicon">❌</div>
+            <div class="spname">RED</div>
+            <div class="spdesc">At risk. Need help.</div>
+          </div>
+        </div>
+
+        <div class="rcard">
+          <div class="rlabel">⚡ The Ganit Rule</div>
+          <div class="rtext">Red is not failure. Hidden Red is failure.</div>
+        </div>
+
+        <div class="cs">
+          <div class="sh">What This Means</div>
+          <ul class="blist">
+            <li>"Almost done," "mostly complete" and "should be fine" are <strong>not useful updates</strong> at Ganit</li>
+            <li>Status must always be either Green (on track, no blockers) or Red (at risk, needs attention)</li>
+            <li>Yellow — the vague middle ground — does not exist at Ganit</li>
+            <li>Clear status allows teams to act early, support one another and prevent last-minute surprises</li>
+            <li><strong>Red does not mean failure</strong> — it means attention is required</li>
+          </ul>
+        </div>
+
+        <div class="cs">
+          <div class="sh">What This Looks Like at Ganit</div>
+          <div class="igrid">
+            <div class="iitem">A project lead marks a milestone <strong>Red</strong> the moment scope, dependency or capacity puts the date at risk — and asks for the support needed.</div>
+            <div class="iitem">A team member says, <strong>"I cannot complete this by Friday with the current scope,"</strong> rather than silently struggling.</div>
+            <div class="iitem">A recruiter clearly says a critical role is <strong>off-track</strong> instead of reporting the pipeline as "in progress" for weeks.</div>
+            <div class="iitem">An internal initiative is not called complete until the owner, output and <strong>next action are clear</strong>.</div>
+            <div class="iitem">Finance <strong>flags an overdue collection</strong> or missing approval before it becomes a month-end surprise.</div>
+          </div>
+        </div>
+
+        <div class="qbox">
+          At Ganit, "almost done," "mostly complete" and "should be fine" are not useful updates.<br>
+          Clear status allows teams to act early, support one another and prevent last-minute surprises.
+          <span class="qhl">Red does not mean failure; it means attention is required.</span>
+        </div>
+
+      </div>
+      <div class="mnav">
+        <button class="btn btn-o" onclick="goMod(0)">← Previous</button>
+        <button class="btn btn-p" onclick="goMod(2)">Principle 02 →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         MODULE 2 — PUNCHING ABOVE YOUR WEIGHT
+    ══════════════════════════════════════════ -->
+    <div class="module" id="mod-2">
+      <div class="mhdr p2">
+        <div class="meyebrow">Principle 02 of 05</div>
+        <div class="mtitle">💪 Punching Above Your Weight</div>
+        <div class="msub">Create more impact than your role demands.</div>
+      </div>
+      <div class="mbody">
+
+        <div class="rcard">
+          <div class="rlabel">⚡ The Ganit Rule</div>
+          <div class="rtext">Do more. Learn more. Impact more.</div>
+        </div>
+
+        <div class="cs">
+          <div class="sh">The Three Pillars</div>
+          <div class="igrid3">
+            <div class="iitem"><span class="icon">💡</span><strong>Understand the bigger picture</strong>Know the client or business problem — not just the task assigned to you.</div>
+            <div class="iitem"><span class="icon">🚀</span><strong>Take initiative</strong>Don't wait to be told. Spot gaps and fill them — even outside your function.</div>
+            <div class="iitem"><span class="icon">🎯</span><strong>Create more impact</strong>Build things that help beyond your current project — templates, tools, ideas.</div>
+          </div>
+        </div>
+
+        <div class="cs">
+          <div class="sh">What This Looks Like at Ganit</div>
+          <ul class="blist">
+            <li>A fresher understands the client or business problem, not only the task assigned, and asks questions that <strong>improve the solution</strong>.</li>
+            <li>A recruiter <strong>improves the interview experience</strong> or joining ratio instead of only working through open positions.</li>
+            <li>An analyst identifies a reusable solution, template or accelerator that can <strong>help teams beyond the current project</strong>.</li>
+            <li>A manager <strong>builds a successor</strong> who can take on larger responsibilities instead of remaining the permanent centre of every decision.</li>
+            <li>Someone notices a <strong>company-wide gap</strong> and helps fix it, even when the problem doesn't sit neatly inside their function.</li>
+          </ul>
+        </div>
+
+        <div class="qbox">
+          At Ganit, titles don't define the size of your impact.
+          <span class="qhl">Think bigger. Take initiative. Create more impact.</span>
+        </div>
+
+      </div>
+      <div class="mnav">
+        <button class="btn btn-o" onclick="goMod(1)">← Previous</button>
+        <button class="btn btn-p" onclick="goMod(3)">Principle 03 →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         MODULE 3 — PROMISE OF SMALL PROMISES
+    ══════════════════════════════════════════ -->
+    <div class="module" id="mod-3">
+      <div class="mhdr p3">
+        <div class="meyebrow">Principle 03 of 05</div>
+        <div class="mtitle">🤝 Promise of Small Promises</div>
+        <div class="msub">Small promises. Kept always. Big promises. Rarely. But definitely.</div>
+      </div>
+      <div class="mbody">
+
+        <div class="rcard">
+          <div class="rlabel">⚡ The Ganit Rule</div>
+          <div class="rtext">Under-promise. Over-deliver. Build trust every day.</div>
+        </div>
+
+        <div class="cs">
+          <div class="sh">Our Promises — What Every Ganitan Commits To</div>
+          <div class="promise-list">
+            <div class="pl-title">Daily commitments that build trust</div>
+            <div class="pl-item">I will share an update by EOD</div>
+            <div class="pl-item">I will review and share feedback</div>
+            <div class="pl-item">I will be on time for the call</div>
+            <div class="pl-item">I will follow through — no matter how small the commitment</div>
+            <div class="pl-item">I will update proactively, even when there is no major change</div>
+          </div>
+        </div>
+
+        <div class="cs">
+          <div class="sh">What This Looks Like at Ganit</div>
+          <div class="igrid">
+            <div class="iitem">We <strong>commit realistic timelines</strong> and communicate early when we see a risk.</div>
+            <div class="iitem">We <strong>follow through on commitments</strong> — no matter how small.</div>
+            <div class="iitem">We <strong>say what we will do, do what we say</strong>, and close the loop.</div>
+            <div class="iitem">We <strong>don't make big commitments for visibility</strong>. We build credibility through consistency.</div>
+            <div class="iitem">We <strong>update proactively</strong>, even when there is no major change to report.</div>
+            <div class="iitem">We <strong>build credibility through consistency</strong>, not through grand gestures.</div>
+          </div>
+        </div>
+
+        <div class="rcard or">
+          <div class="rlabel">🔑 Trust is Built</div>
+          <div class="rtext">Trust is built one small promise at a time. Not in grand gestures — in everyday reliability.</div>
+        </div>
+
+        <div class="qbox">
+          At Ganit, trust is earned in the small things.
+          <span class="qhl">Small promises. Kept always. That's how we build something big — together.</span>
+        </div>
+
+      </div>
+      <div class="mnav">
+        <button class="btn btn-o" onclick="goMod(2)">← Previous</button>
+        <button class="btn btn-p" onclick="goMod(4)">Principle 04 →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         MODULE 4 — ATTITUDE OVER APTITUDE
+    ══════════════════════════════════════════ -->
+    <div class="module" id="mod-4">
+      <div class="mhdr p4">
+        <div class="meyebrow">Principle 04 of 05</div>
+        <div class="mtitle">🎯 Attitude over Aptitude</div>
+        <div class="msub">We hire for attitude. We grow with learning. We lead with mindset.</div>
+      </div>
+      <div class="mbody">
+
+        <div class="rcard">
+          <div class="rlabel">⚡ The Ganit Rule</div>
+          <div class="rtext">Mindset first. Skills next. Character always.</div>
+        </div>
+
+        <div class="cs">
+          <div class="sh">Three Pillars of the Right Attitude</div>
+          <div class="igrid3">
+            <div class="iitem"><span class="icon">📈</span><strong>Growth Mindset</strong>Stay curious. Keep learning. Never stop improving.</div>
+            <div class="iitem"><span class="icon">🏔️</span><strong>Resilience</strong>Embrace challenges. Learn from setbacks. Keep going.</div>
+            <div class="iitem"><span class="icon">🙋</span><strong>Ownership</strong>Take initiative. Own outcomes. Drive results.</div>
+          </div>
+        </div>
+
+        <div class="cs">
+          <div class="sh">What Ganit Looks for and What We Offer</div>
+          <div class="igrid">
+            <div class="iitem"><strong>We hire for attitude and potential</strong><br>We look for curiosity, ownership, coachability and a drive to learn.</div>
+            <div class="iitem"><strong>We give everyone a chance to grow</strong><br>Opportunities are earned through attitude and contribution.</div>
+            <div class="iitem"><strong>We support with learning and feedback</strong><br>We invest in building skills and enabling growth.</div>
+            <div class="iitem"><strong>We hold ourselves accountable</strong><br>We take ownership, follow through and deliver on commitments.</div>
+            <div class="iitem"><strong>We value effort and improvement</strong><br>We recognize people who show initiative, persevere and get better every day.</div>
+            <div class="iitem"><strong>We build a culture of trust and respect</strong><br>We support each other's growth and celebrate progress.</div>
+          </div>
+        </div>
+
+        <div class="cs">
+          <div class="sh">Attitude Tags — What We Celebrate</div>
+          <div class="gtags">
+            <span class="gtag">Curious</span>
+            <span class="gtag or">Coachable</span>
+            <span class="gtag gr">Ownership mindset</span>
+            <span class="gtag">Resilient</span>
+            <span class="gtag or">Proactive</span>
+            <span class="gtag gr">Continuous learner</span>
+            <span class="gtag">Collaborative</span>
+            <span class="gtag or">Growth-oriented</span>
+          </div>
+        </div>
+
+        <div class="qbox">
+          At Ganit, we believe the right attitude can shape outcomes, inspire teams and build a better company.
+          <span class="qhl">Bring the right attitude. Learn continuously. Grow together. Make an impact.</span>
+        </div>
+
+        <div class="rcard or">
+          <div class="rlabel">🏆 Remember</div>
+          <div class="rtext">Attitude can take you further. We will take you together.</div>
+        </div>
+
+      </div>
+      <div class="mnav">
+        <button class="btn btn-o" onclick="goMod(3)">← Previous</button>
+        <button class="btn btn-p" onclick="goMod(5)">Principle 05 →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         MODULE 5 — MAXIMISING VOCALNESS
+    ══════════════════════════════════════════ -->
+    <div class="module" id="mod-5">
+      <div class="mhdr p5">
+        <div class="meyebrow">Principle 05 of 05</div>
+        <div class="mtitle">📢 Maximising Vocalness & Minimising Hierarchy</div>
+        <div class="msub">Ideas over titles. Speak up. Listen deeply. Together, we make better decisions.</div>
+      </div>
+      <div class="mbody">
+
+        <div class="rcard">
+          <div class="rlabel">⚡ The Ganit Rule</div>
+          <div class="rtext">No ego. No barriers. Just ideas and impact.</div>
+        </div>
+
+        <div class="cs">
+          <div class="sh">Four Values We Live By</div>
+          <div class="igrid">
+            <div class="iitem"><span class="icon">📣</span><strong>Speak Freely</strong>Share ideas, ask questions and challenge respectfully. Your voice matters here.</div>
+            <div class="iitem"><span class="icon">👂</span><strong>Listen Deeply</strong>Listen to understand, not to reply. Every perspective deserves genuine attention.</div>
+            <div class="iitem"><span class="icon">🤲</span><strong>Respect Everyone</strong>Every person, every role, every voice matters — regardless of title or seniority.</div>
+            <div class="iitem"><span class="icon">⭐</span><strong>Share Credit</strong>We win together. We celebrate together. We grow together.</div>
+          </div>
+        </div>
+
+        <div class="cs">
+          <div class="sh">What This Looks Like at Ganit</div>
+          <ul class="blist">
+            <li>Team meetings encourage <strong>open dialogue</strong> — everyone is invited to contribute, regardless of role or seniority.</li>
+            <li><strong>Junior team members feel safe</strong> to question, challenge and offer new perspectives.</li>
+            <li>Decisions are made based on <strong>merit and impact</strong>, not on title or position.</li>
+            <li><strong>Leaders are approachable</strong> — they listen, support and remove barriers.</li>
+            <li>We <strong>communicate transparently</strong> across teams and functions.</li>
+            <li>We <strong>give credit openly</strong> and elevate others along the way.</li>
+          </ul>
+        </div>
+
+        <div class="rcard or">
+          <div class="rlabel">🎯 One Ganit</div>
+          <div class="rtext">One Ganit. One Team. One Voice. — Stronger voices. Smarter decisions.</div>
+        </div>
+
+        <div class="qbox">
+          At Ganit, we replace hierarchy with humanity and silence with courage.
+          <span class="qhl">Speak up. Listen more. Respect all. Together, we build what's best for our people, our clients and our company.</span>
+        </div>
+
+      </div>
+      <div class="mnav">
+        <button class="btn btn-o" onclick="goMod(4)">← Previous</button>
+        <button class="btn btn-org" onclick="openFinalQuiz()">Start Final Quiz ✏️</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         MODULE 6 — FINAL QUIZ REDIRECT
+    ══════════════════════════════════════════ -->
+    <div class="module" id="mod-6">
+      <div class="mhdr quiz">
+        <div class="meyebrow">Culture Assessment</div>
+        <div class="mtitle">✏️ Final Quiz — Ganit Culture</div>
+        <div class="msub">Complete the final assessment through Microsoft Forms.</div>
+      </div>
+      <div class="mbody">
+        <div class="qbox" style="text-align:center; padding:32px 24px;">
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:700; color:var(--navy); margin-bottom:10px;">Your final quiz is ready.</div>
+          <div style="font-size:14px; color:var(--text-muted); margin-bottom:22px; line-height:1.6;">Click below to open the Microsoft Forms assessment and submit your responses.</div>
+          <button class="btn btn-org" onclick="openFinalQuiz()">Open Final Quiz ↗</button>
+        </div>
+      </div>
+      <div class="mnav">
+        <button class="btn btn-o" onclick="goMod(5)">← Previous</button>
+      </div>
+    </div>
+
+<script>
+  function openFinalQuiz(){
+    window.open('https://forms.cloud.microsoft/r/zv7muwqUxQ', '_blank', 'noopener,noreferrer');
+  }
+  let curMod = 0;
+  const TOTAL = 6;
+
+  function goMod(idx) {
+    document.getElementById('mod-'+curMod).classList.remove('active');
+    document.getElementById('nav-'+curMod).classList.remove('active');
+    document.getElementById('nav-'+curMod).classList.add('done');
+    curMod = idx;
+    document.getElementById('mod-'+idx).classList.add('active');
+    document.getElementById('nav-'+idx).classList.remove('done');
+    document.getElementById('nav-'+idx).classList.add('active');
+    const pct = Math.round(((idx+1)/TOTAL)*100);
+    document.getElementById('progFill').style.width = pct+'%';
+    document.getElementById('progLabel').textContent = idx < 6 ? 'Module '+(idx+1)+' of '+TOTAL : 'Final Quiz';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+</script>
+</body>
+</html>
